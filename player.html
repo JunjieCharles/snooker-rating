@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="site-version" content="9dbdaa705a0c">
+  <meta name="i18n-title" content="player.title">
+  <meta name="description" data-i18n-content="player.description" content="斯诺克职业选手等级分曲线与比赛记录。">
+  <title>选手详情｜斯诺克等级分</title>
+  <script>try{const l=localStorage.getItem("snooker-rating-locale");if(l==="en"||l==="zh-CN"){document.documentElement.lang=l;document.documentElement.dataset.currentLocale=l}}catch{}</script>
+  <link rel="icon" href="assets/snooker-rating-logo-badge.svg?v=9dbdaa705a0c" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=9dbdaa705a0c">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" data-i18n-aria-label="common.homeAria"><span class="brand-mark" aria-hidden="true"></span><span><strong data-i18n="common.brand">斯诺克等级分</strong><small>Snooker Rating</small></span></a>
+    <nav aria-label="主导航" data-i18n-aria-label="common.mainNavigationAria"><a href="index.html" data-i18n="common.currentRanking">当前排名</a><a href="history.html" data-i18n="common.historyRanking">历史排名</a><a href="head-to-head.html" data-i18n="common.headToHead">交手对比</a></nav>
+    <div class="player-search" data-player-search><label class="sr-only" for="global-player-search" data-i18n="common.playerSearch">查找选手</label><input id="global-player-search" type="search" placeholder="查找选手…" data-i18n-placeholder="common.playerSearchPlaceholder" autocomplete="off"><div class="search-results" data-search-results hidden></div></div>
+    <div class="language-switcher" role="group" aria-label="选择语言" data-i18n-aria-label="common.languageAria"><button type="button" data-locale="zh-CN" aria-pressed="true">中文</button><button type="button" data-locale="en" aria-pressed="false">English</button></div>
+  </header>
+  <main>
+    <div class="breadcrumbs"><a href="index.html" data-i18n="common.currentRanking">当前排名</a><span aria-hidden="true">/</span><span id="breadcrumb-player" data-i18n="ranking.player">选手</span></div>
+    <div id="page-error" class="message error-message" role="alert" hidden></div>
+    <section id="player-profile" class="player-profile hero" aria-busy="true">
+      <div><p class="eyebrow">PLAYER PROFILE</p><h1 id="player-name" data-i18n="player.details">选手详情</h1><p id="player-subtitle"></p><a id="player-source" class="source-link" target="_blank" rel="noreferrer" hidden data-i18n="player.sourceProfile">查看来源资料 ↗</a></div>
+      <dl id="player-facts" class="player-facts"></dl>
+    </section>
+    <section class="panel player-chart-panel">
+      <div class="panel-heading chart-heading"><div><p class="eyebrow">CAREER CURVE</p><h2 data-i18n="player.careerCurve">等级分生涯曲线</h2></div><div class="range-switcher" id="range-switcher"><button type="button" data-years="5" data-i18n="common.lastFiveYears">近 5 年</button><button type="button" data-years="10" data-i18n="common.lastTenYears">近 10 年</button><button type="button" data-years="all" class="is-active" data-i18n="common.all">全部</button></div></div>
+      <div id="rating-chart" class="rating-chart player-chart" aria-live="polite"></div>
+      <p class="chart-note" data-i18n="player.chartNote">阴影为 ±1 Elo 标准误。曲线是当前数据版本计算的完整 WHR 后验，历史节点可能随数据更新而变化。</p>
+    </section>
+    <section class="panel match-panel">
+      <div class="panel-heading"><div><p class="eyebrow">MATCH RECORD</p><h2 data-i18n="player.matchRecord">比赛记录</h2></div><span class="result-count" id="match-count"></span></div>
+      <div class="match-filters">
+        <label><span data-i18n="player.search">搜索</span><input id="match-search" type="search" placeholder="赛事、轮次或对手" data-i18n-placeholder="player.matchSearchPlaceholder"></label>
+        <label><span data-i18n="player.year">年份</span><select id="match-year"><option value="" data-i18n="player.allYears">全部年份</option></select></label>
+        <label><span data-i18n="player.result">结果</span><select id="match-result"><option value="" data-i18n="player.allResults">全部结果</option><option value="win" data-i18n="player.win">胜</option><option value="loss" data-i18n="player.loss">负</option><option value="draw" data-i18n="player.draw">平</option></select></label>
+      </div>
+      <div class="table-scroll"><table class="match-table"><thead><tr><th data-i18n="player.date">日期</th><th data-i18n="player.tournamentRound">赛事 / 轮次</th><th data-i18n="player.opponent">对手</th><th data-i18n="player.result">结果</th><th class="score-matchup-heading" data-i18n="player.score">比分</th><th data-i18n="player.source">来源</th></tr></thead><tbody id="match-body"></tbody></table></div>
+      <div class="pagination" id="match-pagination" aria-label="比赛记录分页" data-i18n-aria-label="player.matchPaginationAria"></div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <nav aria-label="友情链接" data-i18n-aria-label="common.relatedLinksAria">
+      <span data-i18n="common.relatedLinksAria">友情链接</span>
+      <a href="https://github.com/JunjieCharles/snooker-rating">GitHub</a>
+      <a href="https://www.remi-coulom.fr/WHR/">Whole-History Rating</a>
+      <a href="https://cuetracker.net/">CueTracker</a>
+      <a href="https://www.wst.tv/">WST</a>
+    </nav>
+    <p class="copyright" data-i18n="common.copyright">© 2026 俊杰Charles</p>
+  </footer>
+  <script type="module" src="assets/player-page.js?v=9dbdaa705a0c"></script>
+</body>
+</html>

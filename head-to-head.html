@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="site-version" content="9dbdaa705a0c">
+  <meta name="i18n-title" content="h2h.title">
+  <meta name="description" data-i18n-content="h2h.description" content="比较两名斯诺克选手的等级分、交手记录和不同局制下的预测胜率。">
+  <title>交手对比｜斯诺克等级分</title>
+  <script>try{const l=localStorage.getItem("snooker-rating-locale");if(l==="en"||l==="zh-CN"){document.documentElement.lang=l;document.documentElement.dataset.currentLocale=l}}catch{}</script>
+  <link rel="icon" href="assets/snooker-rating-logo-badge.svg?v=9dbdaa705a0c" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=9dbdaa705a0c">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="斯诺克等级分首页" data-i18n-aria-label="common.homeAria">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span><strong data-i18n="common.brand">斯诺克等级分</strong><small>Snooker Rating</small></span>
+    </a>
+    <nav aria-label="主导航" data-i18n-aria-label="common.mainNavigationAria"><a href="index.html" data-i18n="common.currentRanking">当前排名</a><a href="history.html" data-i18n="common.historyRanking">历史排名</a><a class="is-current" href="head-to-head.html" data-i18n="common.headToHead">交手对比</a></nav>
+    <div class="player-search" data-player-search>
+      <label class="sr-only" for="global-player-search" data-i18n="common.playerSearch">查找选手</label>
+      <input id="global-player-search" type="search" placeholder="查找选手…" data-i18n-placeholder="common.playerSearchPlaceholder" autocomplete="off">
+      <div class="search-results" data-search-results hidden></div>
+    </div>
+    <div class="language-switcher" role="group" aria-label="选择语言" data-i18n-aria-label="common.languageAria"><button type="button" data-locale="zh-CN" aria-pressed="true">中文</button><button type="button" data-locale="en" aria-pressed="false">English</button></div>
+  </header>
+  <main>
+    <section class="hero compact-hero">
+      <div>
+        <p class="eyebrow">HEAD TO HEAD</p>
+        <h1 data-i18n="h2h.heading">交手对比</h1>
+        <p data-i18n="h2h.introduction">先选择两名具体选手，再比较等级分走势、真实交手数据与不同局制下的预测。</p>
+      </div>
+      <dl class="run-facts" id="run-facts" aria-label="数据规模" data-i18n-aria-label="common.dataScaleAria"></dl>
+    </section>
+    <div id="page-error" class="message error-message" role="alert" hidden></div>
+    <section class="panel h2h-selector-panel" aria-labelledby="h2h-selector-heading">
+      <div class="panel-heading"><div><p class="eyebrow">PLAYERS</p><h2 id="h2h-selector-heading" data-i18n="h2h.choosePlayers">选择两名选手</h2></div></div>
+      <form id="h2h-form" class="h2h-selector-form">
+        <div class="h2h-picker-field"><label for="h2h-player-a" data-i18n="h2h.playerA">选手 A</label><div class="h2h-player-picker"><input id="h2h-player-a" type="search" placeholder="输入姓名或国籍…" data-i18n-placeholder="h2h.playerSearchPlaceholder" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="h2h-results-a" aria-expanded="false" required><div id="h2h-results-a" class="h2h-picker-results" role="listbox" hidden></div></div></div>
+        <span class="versus" aria-hidden="true">VS</span>
+        <div class="h2h-picker-field"><label for="h2h-player-b" data-i18n="h2h.playerB">选手 B</label><div class="h2h-player-picker"><input id="h2h-player-b" type="search" placeholder="输入姓名或国籍…" data-i18n-placeholder="h2h.playerSearchPlaceholder" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="h2h-results-b" aria-expanded="false" required><div id="h2h-results-b" class="h2h-picker-results" role="listbox" hidden></div></div></div>
+        <button class="primary-button" type="submit" data-i18n="h2h.compare">开始比较</button>
+      </form>
+      <p id="h2h-selection-error" class="inline-error" role="alert" hidden></p>
+      <section id="upcoming-widget" class="upcoming-widget" aria-labelledby="upcoming-heading" hidden>
+        <div class="upcoming-widget-heading">
+          <div><p class="eyebrow">UPCOMING</p><h3 id="upcoming-heading" data-i18n="h2h.upcomingHeading">即将开始的对阵</h3></div>
+          <span id="upcoming-count" class="result-count"></span>
+        </div>
+        <p class="upcoming-introduction" data-i18n="h2h.upcomingIntroduction">这里列出 WST 已公布、但尚未计入本站等级分的比赛。双方均能对应到本站选手时，可点击打开交手对比；其余对阵仅展示赛程。</p>
+        <div id="upcoming-list" class="upcoming-list"></div>
+        <div id="no-upcoming" class="empty-state" data-i18n="h2h.noUpcoming" hidden>当前没有尚未计入本站等级分的 WST 对阵。</div>
+        <p id="upcoming-source" class="upcoming-source"></p>
+      </section>
+    </section>
+
+    <div id="comparison-content" hidden>
+      <section class="panel player-chart-panel" aria-labelledby="h2h-chart-heading">
+        <div class="panel-heading chart-heading">
+          <div><p class="eyebrow">RATING</p><h2 id="h2h-chart-heading" data-i18n="h2h.ratingCurves">等级分曲线对比</h2></div>
+          <div class="range-switcher" id="range-switcher" aria-label="曲线时间范围" data-i18n-aria-label="common.curveRangeAria">
+            <button type="button" data-years="5" data-i18n="common.lastFiveYears">近 5 年</button><button type="button" data-years="10" class="is-active" data-i18n="common.lastTenYears">近 10 年</button><button type="button" data-years="all" data-i18n="common.all">全部</button>
+          </div>
+        </div>
+        <div id="h2h-player-cards" class="h2h-player-cards"></div>
+        <div id="rating-chart" class="rating-chart" aria-live="polite"></div>
+        <p class="chart-note" data-i18n="h2h.chartNote">曲线使用当前数据版本回算的完整 WHR 后验；历史节点可能随数据更新而变化。</p>
+      </section>
+
+      <section class="panel h2h-data-panel" aria-labelledby="h2h-prediction-heading">
+        <div class="panel-heading"><div><p class="eyebrow">PREDICTION</p><h2 id="h2h-prediction-heading" data-i18n="h2h.ratingPrediction">基于等级分的预测</h2></div></div>
+        <div id="frame-prediction" class="probability-feature frame-probability-feature"></div>
+        <form id="best-of-form" class="best-of-controls">
+          <label><span data-i18n="h2h.bestOfLabel">BO 局制</span><input id="best-of-input" type="number" value="9" min="1" max="99" step="1" inputmode="numeric" aria-describedby="best-of-help"></label>
+          <button class="quiet-button" type="submit" data-i18n="h2h.updatePrediction">更新预测</button>
+          <small id="best-of-help" data-i18n="h2h.bestOfHelp">默认 BO9；可输入 1–99 之间的整数，偶数局制允许平局。</small>
+          <span id="best-of-error" class="inline-error" role="alert" hidden></span>
+        </form>
+        <div id="bo-prediction" class="probability-feature bo-probability-feature"></div>
+        <p class="chart-note" data-i18n="h2h.predictionNote">预测采用两人当前 Rating 的 Bradley–Terry/Elo 点估计；假设各局相互独立且单局胜率不随比赛进程变化，不包含临场状态、开球顺序或赛事条件。</p>
+        <div id="score-probability-grid" class="score-probability-grid"></div>
+      </section>
+
+      <section class="panel h2h-data-panel" aria-labelledby="h2h-history-summary-heading">
+        <div class="panel-heading"><div><p class="eyebrow">ACTUAL</p><h2 id="h2h-history-summary-heading" data-i18n="h2h.actualRecord">真实历史数据</h2></div></div>
+        <div id="actual-rings" class="h2h-ring-grid"></div>
+        <p class="chart-note" data-i18n="h2h.actualNote">只统计进入当前 M1 评分数据集且有明确比分的对战；退赛、取消和无结果不会被静默计为普通胜负。</p>
+      </section>
+
+      <section class="panel match-panel" aria-labelledby="h2h-meetings-heading">
+        <div class="panel-heading"><div><p class="eyebrow">MATCHES</p><h2 id="h2h-meetings-heading" data-i18n="h2h.allMeetings">过往所有对战记录</h2></div><span class="result-count" id="meeting-count"></span></div>
+        <div class="table-scroll"><table class="match-table"><thead><tr><th data-i18n="player.date">日期</th><th data-i18n="player.tournamentRound">赛事 / 轮次</th><th data-i18n="h2h.winner">胜者</th><th class="h2h-score-cell" data-i18n="player.score">比分</th><th data-i18n="player.source">来源</th></tr></thead><tbody id="meeting-body"></tbody></table></div>
+        <div id="no-meetings" class="empty-state" data-i18n="h2h.noMeetings" hidden>当前评分数据集中没有二人的直接交手记录。</div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><nav aria-label="友情链接" data-i18n-aria-label="common.relatedLinksAria"><span data-i18n="common.relatedLinksAria">友情链接</span><a href="https://github.com/JunjieCharles/snooker-rating">GitHub</a><a href="https://www.remi-coulom.fr/WHR/">Whole-History Rating</a><a href="https://cuetracker.net/">CueTracker</a><a href="https://www.wst.tv/">WST</a></nav><p class="copyright" data-i18n="common.copyright">© 2026 俊杰Charles</p></footer>
+  <script type="module" src="assets/head-to-head-page.js?v=9dbdaa705a0c"></script>
+</body>
+</html>

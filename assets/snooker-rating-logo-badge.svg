@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 66 444 424" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">Snooker Rating logo</title>
+  <desc id="logo-description">A snooker ball badge containing rising rating bars and a line chart.</desc>
+  <defs>
+    <clipPath id="badge-clip">
+      <circle cx="224" cy="282" r="190"/>
+    </clipPath>
+    <clipPath id="inner-content-clip">
+      <circle cx="224" cy="282" r="148"/>
+    </clipPath>
+    <path id="trend-curve" d="M61 374C129 356 198 320 260 270C319 223 370 165 414 112"/>
+    <marker id="trend-arrow-outline" viewBox="0 0 16 16" refX="9" refY="8" markerWidth="3" markerHeight="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 16 8 0 16 4 8Z" fill="#0d3b2f"/>
+    </marker>
+    <marker id="trend-arrow" viewBox="0 0 16 16" refX="9" refY="8" markerWidth="3.6" markerHeight="3.6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 16 8 0 16 4 8Z" fill="#e5c77e"/>
+    </marker>
+  </defs>
+
+  <circle cx="224" cy="282" r="198" fill="#082d24"/>
+  <circle cx="224" cy="282" r="190" fill="#0d3b2f"/>
+
+  <g clip-path="url(#badge-clip)">
+    <g fill="#e5c77e" clip-path="url(#inner-content-clip)">
+      <path d="M74 414h44v28H74z"/>
+      <path d="M137 376h52v66h-52z"/>
+      <path d="M208 332h54v110h-54z"/>
+      <path d="M281 278h54v164h-54z"/>
+      <path d="M354 218h54v224h-54z"/>
+    </g>
+
+    <circle cx="224" cy="282" r="170" fill="none" stroke="#e5c77e" stroke-width="16"/>
+  </g>
+
+  <use href="#trend-curve" fill="none" stroke="#0d3b2f" stroke-width="29" stroke-linecap="round" marker-end="url(#trend-arrow-outline)"/>
+  <use href="#trend-curve" fill="none" stroke="#e5c77e" stroke-width="17" stroke-linecap="round" marker-end="url(#trend-arrow)"/>
+
+  <g fill="#fffdf7">
+    <ellipse cx="156" cy="192" rx="39" ry="28" transform="rotate(-28 156 192)"/>
+    <circle cx="121" cy="225" r="10"/>
+  </g>
+</svg>

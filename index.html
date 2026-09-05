@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="site-version" content="9dbdaa705a0c">
+  <meta name="i18n-title" content="index.title">
+  <meta name="description" data-i18n-content="index.description" content="基于 Whole-History Rating 的斯诺克职业选手等级分与历史曲线。">
+  <title>当前排名｜斯诺克等级分</title>
+  <script>try{const l=localStorage.getItem("snooker-rating-locale");if(l==="en"||l==="zh-CN"){document.documentElement.lang=l;document.documentElement.dataset.currentLocale=l}}catch{}</script>
+  <link rel="icon" href="assets/snooker-rating-logo-badge.svg?v=9dbdaa705a0c" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=9dbdaa705a0c">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="斯诺克等级分首页" data-i18n-aria-label="common.homeAria">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span><strong data-i18n="common.brand">斯诺克等级分</strong><small>Snooker Rating</small></span>
+    </a>
+    <nav aria-label="主导航" data-i18n-aria-label="common.mainNavigationAria">
+      <a class="is-current" href="index.html" data-i18n="common.currentRanking">当前排名</a>
+      <a href="history.html" data-i18n="common.historyRanking">历史排名</a>
+      <a href="head-to-head.html" data-i18n="common.headToHead">交手对比</a>
+    </nav>
+    <div class="player-search" data-player-search>
+      <label class="sr-only" for="global-player-search" data-i18n="common.playerSearch">查找选手</label>
+      <input id="global-player-search" type="search" placeholder="查找选手…" data-i18n-placeholder="common.playerSearchPlaceholder" autocomplete="off">
+      <div class="search-results" data-search-results hidden></div>
+    </div>
+    <div class="language-switcher" role="group" aria-label="选择语言" data-i18n-aria-label="common.languageAria"><button type="button" data-locale="zh-CN" aria-pressed="true">中文</button><button type="button" data-locale="en" aria-pressed="false">English</button></div>
+  </header>
+  <main>
+    <section class="hero compact-hero">
+      <div>
+        <p class="eyebrow">CURRENT RANKING</p>
+        <h1 data-i18n="index.heading">当前排名</h1>
+        <p id="page-summary" data-i18n="index.loading">正在读取最新等级分…</p>
+      </div>
+      <dl class="run-facts" id="run-facts" aria-label="数据规模"></dl>
+    </section>
+    <div id="page-error" class="message error-message" role="alert" hidden></div>
+    <section id="ranking-app" class="ranking-layout stacked-ranking-layout" aria-busy="true">
+      <div class="ranking-panel panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">RANKING</p><h2 data-i18n="ranking.fullTable">总排名表</h2></div>
+          <span class="result-count" id="ranking-count"></span>
+        </div>
+        <div class="table-tools">
+          <label><span class="sr-only" data-i18n="ranking.filter">筛选排名</span><input id="ranking-search" type="search" placeholder="搜索姓名或国籍" data-i18n-placeholder="ranking.searchPlaceholder"></label>
+        </div>
+        <div class="table-scroll">
+          <table class="ranking-table">
+            <colgroup>
+              <col class="ranking-col-compare"><col class="ranking-col-rank"><col class="ranking-col-player"><col class="ranking-col-nationality"><col class="ranking-col-rating"><col class="ranking-col-last-played"><col class="ranking-col-matches">
+            </colgroup>
+            <thead><tr>
+              <th scope="col" class="compare-column" data-i18n="ranking.compare">比较</th>
+              <th scope="col"><button data-sort="rank" data-i18n="ranking.rank">名次</button></th>
+              <th scope="col"><button data-sort="name" data-i18n="ranking.player">选手</button></th>
+              <th scope="col"><button data-sort="nationality" data-i18n="ranking.nationality">国籍</button></th>
+              <th scope="col" class="numeric rating-column"><button data-sort="rating" data-i18n="common.rating">等级分</button></th>
+              <th scope="col"><button data-sort="last_played" data-i18n="ranking.lastPlayed">最后参赛</button></th>
+              <th scope="col" class="numeric"><button data-sort="matches" data-i18n="ranking.matches">场次</button></th>
+            </tr></thead>
+            <tbody id="ranking-body"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="ranking-pagination" aria-label="排名分页" data-i18n-aria-label="ranking.paginationAria"></div>
+      </div>
+      <aside class="chart-panel panel" aria-label="等级分曲线比较" data-i18n-aria-label="ranking.chartPanelAria">
+        <div class="panel-heading chart-heading">
+          <div><p class="eyebrow">COMPARISON</p><h2 data-i18n="ranking.chartHeading">等级分曲线</h2></div>
+          <div class="range-switcher" id="range-switcher" aria-label="曲线时间范围" data-i18n-aria-label="common.curveRangeAria">
+            <button type="button" data-years="5" data-i18n="common.lastFiveYears">近 5 年</button>
+            <button type="button" data-years="10" class="is-active" data-i18n="common.lastTenYears">近 10 年</button>
+            <button type="button" data-years="all" data-i18n="common.all">全部</button>
+          </div>
+        </div>
+        <div class="selection-actions">
+          <span id="selection-count">已选 0 人</span>
+          <button class="quiet-button" id="restore-top-ten" type="button" data-i18n="ranking.restoreTopTen">恢复前十名</button>
+          <button class="quiet-button" id="clear-selection" type="button" data-i18n="ranking.clear">清空</button>
+        </div>
+        <div id="selected-players" class="selected-players" aria-label="已选选手" data-i18n-aria-label="ranking.selectedPlayersAria"></div>
+        <div id="rating-chart" class="rating-chart" aria-live="polite"></div>
+        <p class="chart-note" data-i18n="ranking.currentChartNote">曲线为当前数据版本计算的完整 WHR 后验；阴影只在聚焦单条曲线时显示 ±1 Elo 标准误。</p>
+      </aside>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <nav aria-label="友情链接" data-i18n-aria-label="common.relatedLinksAria">
+      <span data-i18n="common.relatedLinksAria">友情链接</span>
+      <a href="https://github.com/JunjieCharles/snooker-rating">GitHub</a>
+      <a href="https://www.remi-coulom.fr/WHR/">Whole-History Rating</a>
+      <a href="https://cuetracker.net/">CueTracker</a>
+      <a href="https://www.wst.tv/">WST</a>
+    </nav>
+    <p class="copyright" data-i18n="common.copyright">© 2026 俊杰Charles</p>
+  </footer>
+  <a href="#rating-chart" class="mobile-chart-return" id="mobile-chart-return" hidden data-i18n="ranking.mobileChartReturn">查看已选曲线</a>
+  <script type="module" src="assets/current-page.js?v=9dbdaa705a0c"></script>
+</body>
+</html>
